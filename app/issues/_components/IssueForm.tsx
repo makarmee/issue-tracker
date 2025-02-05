@@ -1,4 +1,5 @@
 "use client";
+
 import ErrorMessage from "@/app/components/ErrorMessage";
 import Spinner from "@/app/components/Spinner";
 import { IssueSchema } from "@/app/validationSchemas";
@@ -24,7 +25,9 @@ export default function IssueForm({ issue }: { issue?: Issue }) {
     formState: { errors },
   } = useForm<IssueFormData>({
     resolver: zodResolver(IssueSchema),
+    defaultValues: issue || { title: "", description: "" }, // مقدار پیش‌فرض فرم
   });
+
   const [error, setError] = useState("");
   const [isSubmitting, setSubmitting] = useState(false);
 
@@ -37,7 +40,7 @@ export default function IssueForm({ issue }: { issue?: Issue }) {
       router.refresh();
     } catch (error) {
       setSubmitting(false);
-      setError("An unexpected error occured.");
+      setError("An unexpected error occurred.");
     }
   });
 
@@ -49,16 +52,11 @@ export default function IssueForm({ issue }: { issue?: Issue }) {
         </Callout.Root>
       )}
       <form className="space-y-3" onSubmit={onSubmit}>
-        <TextField.Root
-          defaultValue={issue?.title}
-          placeholder="Title"
-          {...register("title")}
-        />
+        <TextField.Root placeholder="Title" {...register("title")} />
         <ErrorMessage>{errors.title?.message}</ErrorMessage>
         <Controller
           name="description"
           control={control}
-          defaultValue={issue?.description}
           render={({ field }) => (
             <SimpleMDE placeholder="Description" {...field} />
           )}

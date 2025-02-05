@@ -1,23 +1,20 @@
 import { prisma } from "@/prisma/client";
 import { notFound } from "next/navigation";
-import dynamic from "next/dynamic";
-import IssueFormSkeleton from "./loading";
-
-const IssueForm = dynamic(() => import("@/app/issues/_components/IssueForm"), {
-  ssr: false,
-  loading: () => <IssueFormSkeleton />,
-});
+import IssueFormWrapper from "@/app/issues/_components/IssueFormWrapper";
 
 interface Props {
   params: { id: string };
 }
 
 export default async function EditIssuePage({ params }: Props) {
+  const id = Number(params.id);
+  if (isNaN(id)) notFound();
+
   const issue = await prisma.issue.findUnique({
-    where: { id: parseInt(params.id) },
+    where: { id },
   });
 
   if (!issue) notFound();
 
-  return <IssueForm issue={issue} />;
+  return <IssueFormWrapper issue={issue} />;
 }

@@ -10,7 +10,7 @@ export default function NavBar() {
   console.log(currentPath);
   const linkes = [
     { label: "Dashboard", href: "/" },
-    { label: "Issues", href: "/issues" },
+    { label: "Issues", href: "/issues/list" },
   ];
 
   return (
